@@ -25,15 +25,16 @@ class AlunoController {
   }
 
   static async cadastrarAluno(req, res) {
-    try {
-      const novoAluno = await aluno.create(req.body);
-      res.status(201).json({
-        message: "criado com sucesso",
-        aluno: novoAluno,
-      });
-    } catch (erro) {
+    const novoAluno = req.body;
+    const alunoExiste = await aluno.findOne({
+      cpf: novoAluno.cpf,
+    });
+
+    if (!alunoExiste) {
+      await aluno.create(novoAluno);
+    } else {
       res.status(500).json({
-        message: `${erro.message} - Falha ao cadastrar aluno`,
+        message: `Já existe um aluno cadastrado com esse CPF!`,
       });
     }
   }
@@ -56,7 +57,9 @@ class AlunoController {
       await aluno.findByIdAndDelete(id);
       res.status(200).json({ message: "Aluno deletado" });
     } catch (erro) {
-      res.status(500).json({ message: `${erro.message} - Falha ao deletar aluno` })
+      res
+        .status(500)
+        .json({ message: `${erro.message} - Falha ao deletar aluno` });
     }
   }
 }
