@@ -49,6 +49,16 @@ class AlunoController {
         .json({ message: `${erro.message} - Falha na atualização do aluno` });
     }
   }
+
+  static async deletaAluno(req, res) {
+    try {
+      const id = req.params.id;
+      await aluno.findByIdAndDelete(id);
+      res.status(200).json({ message: "Aluno deletado" });
+    } catch (erro) {
+      res.status(500).json({ message: `${erro.message} - Falha ao deletar aluno` })
+    }
+  }
 }
 
 export default AlunoController;
