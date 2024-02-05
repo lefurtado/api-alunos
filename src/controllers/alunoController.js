@@ -1,6 +1,8 @@
 import aluno from "../models/Alunos.js";
 
 class AlunoController {
+  // colocar paginação
+  // colocar campo status = 1
   static async listarAlunos(req, res) {
     try {
       const listaAlunos = await aluno.find({});
@@ -31,14 +33,21 @@ class AlunoController {
     });
 
     if (!alunoExiste) {
-      await aluno.create(novoAluno);
+      const novoAluno = await aluno.create(novoAluno);
+      res.status(200).json({
+        message: "Aluno cadastrado com sucesso!",
+        aluno: novoAluno,
+      });
     } else {
+      // ler metodos http 203
       res.status(500).json({
         message: `Já existe um aluno cadastrado com esse CPF!`,
       });
     }
   }
 
+  // implementar validação CPF
+  // retorna objeto atualizado
   static async atualizarAluno(req, res) {
     try {
       const id = req.params.id;
@@ -51,17 +60,12 @@ class AlunoController {
     }
   }
 
+  // atualizar para status = 0
   static async deletaAluno(req, res) {
-    try {
-      const id = req.params.id;
-      await aluno.findByIdAndDelete(id);
-      res.status(200).json({ message: "Aluno deletado" });
-    } catch (erro) {
-      res
-        .status(500)
-        .json({ message: `${erro.message} - Falha ao deletar aluno` });
-    }
+    res.status(200).json({ message: "Metodo não implementado" });
   }
 }
 
 export default AlunoController;
+
+// criar relação 1 pra 1 endereço
